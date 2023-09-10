@@ -40,57 +40,63 @@ const Body = () => {
   return listOfRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
-    <section className="body">
-      <div className="search-box">
-        <input
-          type="text"
-          value={searchText}
-          placeholder="Search "
-          onChange={(e) => {
-            setSearchText(e.target.value);
-          }}
-        ></input>
-        <button
-          className="search-button"
-          onClick={() => {
-            const filterData = listOfRestaurants.filter((res) => {
-              console.log("res:", res);
-              console.log(searchText);
-              return res.info.name
-                .toLowerCase()
-                .includes(searchText.toLowerCase());
-            });
-            console.log("filterData", filterData);
-            setFilterRestaurants(filterData);
-          }}
-        >
-          Search
-        </button>
+    <div className="body">
+      <div className="filter flex">
+        <div className="search m-4 p-4">
+          <input
+            type="text"
+            className="border h-10 border-gray-400 rounded-md"
+            value={searchText}
+            placeholder="Search "
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
+          ></input>
+          <button
+            className="px-4 py-2 bg-green-400 m-4 rounded-md"
+            onClick={() => {
+              const filterData = listOfRestaurants.filter((res) => {
+                console.log("res:", res);
+                console.log(searchText);
+                return res.info.name
+                  .toLowerCase()
+                  .includes(searchText.toLowerCase());
+              });
+              console.log("filterData", filterData);
+              setFilterRestaurants(filterData);
+            }}
+          >
+            Search
+          </button>
+        </div>
+        <div className="search m-4 p-4 flex items-center">
+          <button
+            className="px-4 py-2 bg-green-400 m-4 rounded-md"
+            onClick={() => {
+              const filteredData = listOfRestaurants.filter(
+                (res) => res.cost < 500
+              );
+              setListOfRestaurants(filteredData);
+              console.log("Mouse Over", filteredData);
+            }}
+          >
+            Top Rated Restaurant
+          </button>
+        </div>
       </div>
-      <div className="filter">
-        <button
-          className="filter-btn"
-          onClick={() => {
-            const filteredData = listOfRestaurants.filter(
-              (res) => res.cost < 500
+      <div className="flex flex-wrap">
+          {filterRestaurants.map((resData) => {
+            return (
+              <Link
+                key={resData.info.id}
+                to={"/restaurants/" + resData.info.id}
+              >
+                <RestaurantCard resData={resData} />
+              </Link>
             );
-            setListOfRestaurants(filteredData);
-            console.log("Mouse Over", filteredData);
-          }}
-        >
-          Top Rated Restaurant
-        </button>
-      </div>
-      <div className="res-container">
-        {filterRestaurants.map((resData) => {
-          return (
-            <Link key={resData.info.id} to={"/restaurants/" + resData.info.id}>
-              <RestaurantCard resData={resData} />;
-            </Link>
-          );
-        })}
-      </div>
-    </section>
+          })}
+        </div>
+    </div>
   );
 };
 
