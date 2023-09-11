@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const useRestaurantMenu = (resId) => {
   const [resInfo, setResInfo] = useState(null);
-  
+
   useEffect(() => {
     fetchMenu();
   }, []);
@@ -13,12 +13,10 @@ const useRestaurantMenu = (resId) => {
         resId +
         "&submitAction=ENTER"
     );
-
     const json = await data.json();
-    console.log("data:", json);
     setResInfo(json.data);
-    return resInfo;
   };
+  return resInfo;
 };
 
 export default useRestaurantMenu;

@@ -1,27 +1,41 @@
 import { useParams } from "react-router-dom";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
+import { useState } from "react";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
   const resInfo = useRestaurantMenu(resId);
 
-  const dataMenu =
-    resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card.card
-      .itemCards;
+  const [showIndex, setShowIndex] = useState(null);
+
+  const categories =
+    resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
+      (c) =>
+        c.card?.["card"]?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
 
   return (
-    <div>
-      <h1>{resInfo?.cards[0]?.card?.card?.info.name}</h1>
-      <h2>{resInfo?.cards[0]?.card?.card?.info.city}</h2>
-      <h2>{resInfo?.cards[0]?.card?.card?.info.costForTwoMessage}</h2>
-      <ul>
-        {dataMenu?.map((item) => (
-          <div>
-            <li>{item.card.info.name}</li>
-            <li>{item.card.info.price}</li>
-          </div>
-        ))}
-      </ul>
+    <div className="text-center">
+      <h1 className="my-4 font-bold text-3xl">
+        {resInfo?.cards[0]?.card?.card?.info.name}
+      </h1>
+      <h2 className="font-bold text-xl">
+        {resInfo?.cards[0]?.card?.card?.info.city}
+      </h2>
+      {categories?.map((category, index) => {
+        return (
+          <RestaurantCategory
+            key={category?.card?.card.title}
+            data={category?.card?.card}
+            showItems={index === showIndex ? true : false}
+            setShowIndex={() => {
+              setShowIndex(index);
+            }}
+          />
+        );
+      })}
     </div>
   );
 };

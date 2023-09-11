@@ -1,4 +1,4 @@
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
 import resList from "../utils/mockData";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
@@ -9,8 +9,9 @@ const Body = () => {
   const [filterRestaurants, setFilterRestaurants] = useState([]);
   let [searchText, setSearchText] = useState("");
 
+  const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
+
   //whenever state variable update,react triggers a reconciliation process(re-render the components)
-  console.log("Body Rendered");
 
   useEffect(() => {
     fetchData();
@@ -22,7 +23,6 @@ const Body = () => {
     );
 
     const json = await data.json();
-    console.log("json:", json);
     setListOfRestaurants(
       json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants ||
         json.data.cards[2].card.card.gridElements.infoWithStyle.restaurants ||
@@ -56,13 +56,10 @@ const Body = () => {
             className="px-4 py-2 bg-green-400 m-4 rounded-md"
             onClick={() => {
               const filterData = listOfRestaurants.filter((res) => {
-                console.log("res:", res);
-                console.log(searchText);
                 return res.info.name
                   .toLowerCase()
                   .includes(searchText.toLowerCase());
               });
-              console.log("filterData", filterData);
               setFilterRestaurants(filterData);
             }}
           >
@@ -77,7 +74,6 @@ const Body = () => {
                 (res) => res.cost < 500
               );
               setListOfRestaurants(filteredData);
-              console.log("Mouse Over", filteredData);
             }}
           >
             Top Rated Restaurant
@@ -85,17 +81,18 @@ const Body = () => {
         </div>
       </div>
       <div className="flex flex-wrap">
-          {filterRestaurants.map((resData) => {
-            return (
-              <Link
-                key={resData.info.id}
-                to={"/restaurants/" + resData.info.id}
-              >
+        {filterRestaurants.map((resData) => {
+          return (
+            <Link key={resData.info.id} to={"/restaurants/" + resData.info.id}>
+              {resData.info.veg ? (
+                <RestaurantCardPromoted resData={resData} />
+              ) : (
                 <RestaurantCard resData={resData} />
-              </Link>
-            );
-          })}
-        </div>
+              )}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };
