@@ -2,7 +2,6 @@
   "name": "react-practice",
   "version": "1.0.0",
   "description": "Practice Project for react",
-  "main": "app.js",
   "scripts": {
     "start": "parcel index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
