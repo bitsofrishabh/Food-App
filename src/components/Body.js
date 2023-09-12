@@ -1,8 +1,9 @@
 import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
 import resList from "../utils/mockData";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import UserContext from "../utils/userContext";
 
 const Body = () => {
   let [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -36,6 +37,8 @@ const Body = () => {
         json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants
     );
   };
+
+  const { loggedInUser, setUserName } = useContext(UserContext);
 
   return listOfRestaurants.length === 0 ? (
     <Shimmer />
@@ -78,6 +81,16 @@ const Body = () => {
           >
             Top Rated Restaurant
           </button>
+        </div>
+        <div className="search m-4 p-4 flex items-center">
+          <label>UserName:- </label>
+          <input
+            className="p-2  m-2 border border-black rounded"
+            value={loggedInUser}
+            onChange={(e) => {
+              setUserName(e.target.value);
+            }}
+          />
         </div>
       </div>
       <div className="flex flex-wrap">
